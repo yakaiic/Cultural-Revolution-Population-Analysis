@@ -1,0 +1,36 @@
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
+# Create a fictional dataset: Assumed annual population reductions and major events
+year <- seq(1965, 1976, by = 1)
+population <- c(695000000, 690000000, 685000000, 682000000, 680000000, 
+                678000000, 675000000, 672000000, 670000000, 668000000, 665000000, 663000000)
+events <- c("Red Guard Period starts", "Cultural Revolution intensifies", "", "PLA to suppress Red Guards", 
+            "Nixon visits China", "Criticism Campaign against Zhou Enlai", "Lin Biao Incident", "Deng Xiaoping ousted", 
+            "Criticism Campaign against Confucius", "Deng Xiaoping attempts to rescue economy", "Zhou Enlai dies", "Mao dies")
+
+# Create dataframe
+population_data <- data.frame(year, population, events)
+
+# Data trend analysis
+population_data <- population_data %>%
+  mutate(population_change = population - lag(population),
+         change_percentage = (population_change / lag(population)) * 100)
+
+# Visualization
+ggplot(population_data, aes(x = year, y = population)) +
+  geom_line(color = "blue", size = 1) +
+  geom_point(color = "red", size = 2) +
+  geom_text(aes(label = events), vjust = -1, hjust = 0.5, color = "darkgreen", size = 3, na.rm = TRUE) +
+  ggtitle("Population Decrease and Major Events in China: 1965-1976") +
+  xlab("Year") +
+  ylab("Population (in billions)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10),
+    legend.position = "none"
+  )
+
